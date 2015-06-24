@@ -33,34 +33,37 @@ instance FromJSON Veiculos where
 	parseJSON _= mzero 
 
 
+{--gera consulda para marca informada--}
 getJSONVeiculos :: Int -> IO B.ByteString
 getJSONVeiculos idMarca = simpleHttp $"http://fipeapi.appspot.com/api/1/carros/veiculos/"++ show idMarca ++ ".json"
 
---getJSONCarro :: String -> String -> String -> IO B.ByteString
---getJSONCarro idMarca fipeCodigo idCarro  = simpleHttp $http://"fipeapi.appspot.com/api/1/carros/veiculo/"++ show idMarca ++"/"++ fipeCodigo ++"/"++idCarro++".json"
-	
-
-
-
+{--gera lista de veiculos para marca informada--}
 geraListaVeiculos idm = do 
 	resultado <- (eitherDecode <$> (getJSONVeiculos idm) ) :: IO (Either String [Veiculos])
 	case resultado of
 		Left err -> return []
 		Right ps -> return ps
 
---geraConsulta                [] =  return [] 
---geraConsulta listaTuplaIdMarcas = do
-geraConsulta = do
+{--gera lista de veiculos para marca informada--}
+--geraConsulta :: IO [(Int,String)] -> [[Veiculos]]
+--geraConsulta [] = []
+geraConsultaVeiculos = do
+	{--gera tupla(ID,MARCA)--}
 	listaTuplaIdMarcas  <- marcas
-	let listaIDMarcas   = L.map fst listaTuplaIdMarcas
-	--let listaNomeMarcas = L.map snd listaTuplaIdMarcas
-	listaVeiculos       <- sequence( L.map geraListaVeiculos listaIDMarcas)
-	--let quantidades     = L.map L.length  listaVeiculos
+	{--gera lista [ID] das marcas--}
+	let listaIDMarcas   		 = L.map fst listaTuplaIdMarcas
+	{--gera lista [NOME] das marcas--}
+	--let listaNomeMarcas 		 = L.map snd listaTuplaIdMarcas
+	{--gera lista de todos [[Veiculos]] --}
+	listaVeiculos       		 <- sequence( L.map geraListaVeiculos listaIDMarcas)
+	--resultado = zip3 (L.map listaIDMarcas)
+	--let totalVeiculosCadastrados = L.map L.length  listaVeiculos
 	--let tripla          = zip3 listaIDMarcas listaNomeMarcas quantidades
 	--let ordenado        = ordenaCarros tripla
 	return (listaVeiculos)
 
-ordenaCarros [] = []
+geraTuplaIdVFipeMarcaV v = (idV v, fipe_marcaV v)
+{--ordenaCarros [] = []
 ordenaCarros ls = L.sortBy (compare `on` terceiro) ls
 
 somaTotalCarros :: [( a , b , Int)] -> Int
@@ -72,3 +75,4 @@ terceiro (_ , _ , x) = x
 
 segundo :: ( a , b , c) -> b
 segundo (_ , x , _) = x 
+--}
