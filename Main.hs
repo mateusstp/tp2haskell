@@ -1,6 +1,7 @@
 import Veiculos
 import Marcas
 import Carros
+import Precos
 import Graphics.Rendering.Chart.Easy
 import Graphics.Rendering.Chart.Backend.Diagrams
 

@@ -35,7 +35,7 @@ getJSONMarca = simpleHttp jsonURLMarca
 
 
 listaIdMarcas :: [Marca] -> [(Int,String)]
-listaIdMarcas m = [(idM x, nameM x) | x <- m]
+listaIdMarcas m = [(idM x, fipe_nameM x) | x <- m]
 
 
 marcas ::IO [(Int,String)]

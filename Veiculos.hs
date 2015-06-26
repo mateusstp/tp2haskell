@@ -14,8 +14,8 @@ import Marcas
 --{"fipe_marca": "Fiat", "referencia": "Fevereiro de 2013", "fipe_codigo": "001267-0", "preco": "R$ 21.712,00", "name": "2011 Gasolina", "key": "2011-1980274", "veiculo": "Palio 1.0 ECONOMY Fire Flex 8V 4p", "id": "1980274", "marca": "FIAT"}
 
 data Veiculos =
-	 Veiculos { fipe_marcaV :: String
-	  		  , fipe_nameV :: String
+	Veiculos { fipe_marcaV :: String
+			  , fipe_nameV :: String
 			  , marcaV :: String
 			  , keyV :: String
 			  , idV :: String
@@ -45,34 +45,10 @@ geraListaVeiculos idm = do
 		Right ps -> return ps
 
 {--gera lista de veiculos para marca informada--}
---geraConsulta :: IO [(Int,String)] -> [[Veiculos]]
---geraConsulta [] = []
 geraConsultaVeiculos = do
 	{--gera tupla(ID,MARCA)--}
 	listaTuplaIdMarcas  <- marcas
 	{--gera lista [ID] das marcas--}
-	let listaIDMarcas   		 = L.map fst listaTuplaIdMarcas
-	{--gera lista [NOME] das marcas--}
-	--let listaNomeMarcas 		 = L.map snd listaTuplaIdMarcas
-	{--gera lista de todos [[Veiculos]] --}
-	listaVeiculos       		 <- sequence( L.map geraListaVeiculos listaIDMarcas)
-	--resultado = zip3 (L.map listaIDMarcas)
-	--let totalVeiculosCadastrados = L.map L.length  listaVeiculos
-	--let tripla          = zip3 listaIDMarcas listaNomeMarcas quantidades
-	--let ordenado        = ordenaCarros tripla
+	let listaIDMarcas = L.map fst listaTuplaIdMarcas
+	listaVeiculos     <- sequence( L.map geraListaVeiculos listaIDMarcas)
 	return (listaVeiculos)
-
-geraTuplaIdVFipeMarcaV v = (idV v, fipe_marcaV v)
-{--ordenaCarros [] = []
-ordenaCarros ls = L.sortBy (compare `on` terceiro) ls
-
-somaTotalCarros :: [( a , b , Int)] -> Int
-somaTotalCarros [] = 0
-somaTotalCarros ls = L.foldr (+) 0 (L.map terceiro ls)
-
-terceiro :: ( a , b , Int) -> Int
-terceiro (_ , _ , x) = x 
-
-segundo :: ( a , b , c) -> b
-segundo (_ , x , _) = x 
---}
