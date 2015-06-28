@@ -38,7 +38,10 @@ getJSONVeiculos :: Int -> IO B.ByteString
 getJSONVeiculos idMarca = simpleHttp $"http://fipeapi.appspot.com/api/1/carros/veiculos/"++ show idMarca ++ ".json"
 
 {--gera lista de veiculos para marca informada--}
-geraListaVeiculos idm = do 
+geraListaVeiculos idm = do
+	let msg = ("aguarde... Consulta de veiculos em andamento... Marca: "++(show idm)++"\n")
+	print  msg
+	appendFile "log.txt" msg 
 	resultado <- (eitherDecode <$> (getJSONVeiculos idm) ) :: IO (Either String [Veiculos])
 	case resultado of
 		Left err -> return []

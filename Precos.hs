@@ -48,6 +48,9 @@ getPreco idMarca idVeiculo ano = fmap decode $ simpleHttp $ "http://fipeapi.apps
 
 geraListaPrecos :: (Int, String, String) -> IO Precos
 geraListaPrecos ltriplaMarcaModeloAno = do
+	let msg = ("aguarde... Consulta de precos em andamento... Marca: "++(show (primeiro ltriplaMarcaModeloAno))++" Modelo : "++ (show(segundo ltriplaMarcaModeloAno))++" Ano: "++(show (terceiro ltriplaMarcaModeloAno)) ++"\n") 
+	print  msg
+	appendFile "log.txt" msg
 	p <- getPreco (primeiro ltriplaMarcaModeloAno) (segundo ltriplaMarcaModeloAno) (terceiro ltriplaMarcaModeloAno) 
 	case p of
 		Nothing -> return precoVazio 

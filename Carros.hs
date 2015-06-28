@@ -42,7 +42,10 @@ aplicaMarca _ [] = []
 aplicaMarca (id:ids) (l:ls) = L.zip (L.replicate (L.length l) id) l : aplicaMarca ids ls 
 
 geraListaCarros :: (Int, String) -> IO [Carros]
-geraListaCarros tuplaIdmIdv = do 
+geraListaCarros tuplaIdmIdv = do
+	let msg = ("aguarde... Consulta de carros em andamento... Marca: "++(show (fst tuplaIdmIdv))++" Veiculos : " ++ (show (snd tuplaIdmIdv))++"\n")
+	print  msg
+	appendFile "log.txt" msg
 	resultado <- (eitherDecode <$> (getJSONCarros (fst tuplaIdmIdv) (snd tuplaIdmIdv) ) :: IO (Either String [Carros]))
 	case resultado of
 		Left err -> return []
