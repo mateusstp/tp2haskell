@@ -60,5 +60,4 @@ geraConsultaCarros = do
 	{-- lista de [[(idm,idv)]]--}
 	let tupla = aplicaMarca idm listaIdv
 	carros <- sequence (L.map (mapM geraListaCarros) tupla)
-	let cs = L.map (L.map (L.filter (\c -> (idC c == "2015-1" || idC c == "2015-3" || idC c == "2013-1" || idC c == "2013-3" || idC c == "2014-1" || idC c == "2014-3" )))) carros
-	return cs
+	return 	carros
