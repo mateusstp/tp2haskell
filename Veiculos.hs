@@ -11,7 +11,6 @@ import GHC.Generics
 import qualified Data.List as L
 import Data.Function
 import Marcas
---{"fipe_marca": "Fiat", "referencia": "Fevereiro de 2013", "fipe_codigo": "001267-0", "preco": "R$ 21.712,00", "name": "2011 Gasolina", "key": "2011-1980274", "veiculo": "Palio 1.0 ECONOMY Fire Flex 8V 4p", "id": "1980274", "marca": "FIAT"}
 
 data Veiculos =
 	Veiculos { fipe_marcaV :: String
@@ -32,13 +31,15 @@ instance FromJSON Veiculos where
 			  	 <*> v .: "name"
 	parseJSON _= mzero 
 
-
-{--gera consulda para marca informada--}
+{--gera consulda para id de car informada marca informada--}
 getJSONVeiculos :: Int -> IO B.ByteString
 getJSONVeiculos idMarca = simpleHttp $"http://fipeapi.appspot.com/api/1/carros/veiculos/"++ show idMarca ++ ".json"
 
-{--gera lista de veiculos para marca informada--}
+{--gera lista de veiculos para marca informada, caso a 
+consulta falhe retorna uma lista vazia--}
+geraListaVeiculos :: Int -> IO [Veiculos]
 geraListaVeiculos idm = do
+	--menagem para gera log de consultas 
 	let msg = ("aguarde... Consulta de veiculos em andamento... Marca: "++(show idm)++"\n")
 	print  msg
 	appendFile "log.txt" msg 
@@ -47,11 +48,14 @@ geraListaVeiculos idm = do
 		Left err -> return []
 		Right ps -> return ps
 
-{--gera lista de veiculos para marca informada--}
+{--retorna lista de [[veiculos]] --}
+geraConsultaVeiculos :: IO [[Veiculos]]
 geraConsultaVeiculos = do
-	{--gera tupla(ID,MARCA)--}
+	{--recebe lista de tupla [(ID,MARCA)]--}
 	listaTuplaIdMarcas  <- marcas
 	{--gera lista [ID] das marcas--}
 	let listaIDMarcas = L.map fst listaTuplaIdMarcas
+	{--retorna lista de [veiculos] cada marca lofo [[veiculos]] 
+	veiculos podem ser compreendidos como modelos existentes de cada marca--}
 	listaVeiculos     <- sequence( L.map geraListaVeiculos listaIDMarcas)
 	return (listaVeiculos)
